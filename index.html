@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tabla Cronológica Bíblico – Histórica</title>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js">
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@500;600&display=swap');
+
+    :root {
+      --bg: #ece2ca;
+      --bg-alt: #e2d5b3;
+      --paper: #f6efdd;
+      --ink: #2c2416;
+      --ink-soft: #5f5442;
+      --border: #c6b587;
+      --border-soft: #d8caa2;
+      --gold: #a3792f;
+      --gold-light: #c9a545;
+      --wine: #6b2737;
+      --wine-bg: #f3e3e1;
+      --wine-border: #d9b6bb;
+      --indigo: #223e56;
+      --indigo-bg: #dee6ec;
+      --indigo-border: #b3c3d2;
+      --danger: #9c2b2b;
+      --shadow: 0 6px 18px rgba(44, 36, 22, 0.16);
+      --radius: 4px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at top left, var(--bg-alt), transparent 60%), var(--bg);
+      color: var(--ink);
+      font-family: 'EB Garamond', serif;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    ::selection {
+      background: var(--gold-light);
+      color: var(--ink);
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Cormorant Garamond', serif;
+      margin: 0;
+    }
+
+    .eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    button {
+      font-family: 'Cinzel', serif;
+      cursor: pointer;
+    }
+    input,
+    select,
+    textarea {
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 36px 24px 80px;
+    }
+
+    /* ---------- Header ---------- */
+    .app-header {
+      text-align: center;
+      padding-bottom: 26px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .header-ornament {
+      color: var(--gold);
+      font-size: 1.4rem;
+      letter-spacing: 0.6em;
+      margin-bottom: 6px;
+    }
+    .app-header h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.01em;
+    }
+    .app-header h1 span {
+      display: block;
+      font-size: 1.5rem;
+      font-style: italic;
+      font-weight: 500;
+      color: var(--wine);
+      margin-top: 2px;
+    }
+    .subtitle {
+      margin-top: 10px;
+      color: var(--ink-soft);
+      font-style: italic;
+      font-size: 1.02rem;
+    }
+
+    /* ---------- Toolbar ---------- */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .search-wrap {
+      flex: 1 1 240px;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .search-wrap input:focus {
+      outline: 2px solid var(--gold-light);
+      outline-offset: 1px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      transition: transform .12s ease, box-shadow .12s ease, background .15s ease;
+      white-space: nowrap;
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--indigo);
+      outline-offset: 2px;
+    }
+    .btn-gold {
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      color: #2c2005;
+      box-shadow: var(--shadow);
+    }
+    .btn-gold:hover {
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--border);
+    }
+    .btn-outline:hover {
+      background: var(--bg-alt);
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: #fff5f0;
+    }
+    .btn-danger:hover {
+      background: #7f2020;
+    }
+
+    /* ---------- Legend ---------- */
+    .timeline-legend {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 22px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legend-item::before {
+      content: "";
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .legend-item.biblical::before {
+      background: var(--wine);
+    }
+    .legend-item.historical::before {
+      background: var(--indigo);
+    }
+
+    /* ---------- Timeline ---------- */
+    .timeline {
+      position: relative;
+      padding-top: 6px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: linear-gradient(var(--border-soft), var(--gold), var(--border-soft));
+      transform: translateX(-1px);
+    }
+
+    .entry {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 96px 1fr;
+      align-items: stretch;
+      gap: 0 18px;
+      margin-bottom: 34px;
+    }
+
+    .node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 88px;
+      height: 88px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 0 5px var(--bg), var(--shadow);
+      text-align: center;
+    }
+    .node-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      line-height: 1;
+    }
+    .node-era {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--wine);
+      margin-top: 2px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 2px;
+      background: var(--border-soft);
+      transform: translateY(-1px);
+    }
+    .card-biblical {
+      border-left: 4px solid var(--wine);
+      background: linear-gradient(180deg, var(--wine-bg), var(--paper) 55%);
+    }
+    .card-biblical::after {
+      right: -18px;
+    }
+    .card-historical {
+      border-left: 4px solid var(--indigo);
+      background: linear-gradient(180deg, var(--indigo-bg), var(--paper) 55%);
+    }
+    .card-historical::after {
+      left: -18px;
+    }
+
+    .card .eyebrow.biblical-label {
+      color: var(--wine);
+    }
+    .card .eyebrow.historical-label {
+      color: var(--indigo);
+    }
+    .card h3 {
+      font-size: 1.18rem;
+      font-weight: 600;
+      margin: 5px 0 6px;
+    }
+    .card p.ref {
+      margin: 0;
+      color: var(--ink-soft);
+      font-style: italic;
+      font-size: 0.92rem;
+    }
+
+    .entry-notes {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      margin-top: 8px;
+      padding: 0 40px;
+    }
+
+    .entry-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-soft);
+    }
+    .icon-btn:hover {
+      background: var(--bg-alt);
+      color: var(--ink);
+    }
+    .icon-btn.danger:hover {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-soft);
+      font-style: italic;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+
+    /* ---------- Modales ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 24, 12, 0.45);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 16px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .modal-overlay.is-open {
+      display: flex;
+    }
+    .modal-overlay[hidden] {
+      display: none !important;
+    }
+    .modal {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 560px;
+      padding: 28px 30px 24px;
+      position: relative;
+    }
+    .modal::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--wine), var(--gold), var(--indigo));
+      border-radius: 6px 6px 0 0;
+    }
+    .modal-sm {
+      max-width: 420px;
+    }
+    .modal h2 {
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+      color: var(--ink);
+    }
+    .modal p {
+      color: var(--ink-soft);
+    }
+
+    fieldset {
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 12px 14px 14px;
+      margin: 0 0 14px;
+    }
+    .fieldset-biblical {
+      border-left: 4px solid var(--wine);
+    }
+    .fieldset-historical {
+      border-left: 4px solid var(--indigo);
+    }
+    legend {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0 6px;
+      color: var(--ink-soft);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 14px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      color: var(--ink-soft);
+      margin-bottom: 5px;
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fffdf6;
+      color: var(--ink);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: 2px solid var(--gold-light);
+      outline-offset: 1px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .checkbox-row input {
+      width: auto;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    /* ---------- Print ---------- */
+    @media print {
+      body {
+        background: #fff;
+      }
+      .toolbar,
+      .timeline-legend,
+      .entry-actions,
+      .modal-overlay {
+        display: none !important;
+      }
+      .app {
+        max-width: 100%;
+        padding: 0;
+      }
+      .app-header {
+        border-bottom: 2px solid #000;
+      }
+      .timeline::before {
+        background: #999;
+      }
+      .node {
+        box-shadow: none;
+        border-color: #555;
+      }
+      .entry {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 22px;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #999;
+        background: #fff !important;
+      }
+      body.hide-refs .ref.ref-biblical {
+        display: none;
+      }
+      body.hide-region .ref.ref-historical {
+        display: none;
+      }
+      body.hide-notes .entry-notes {
+        display: none;
+      }
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 760px) {
+      .app-header h1 {
+        font-size: 2rem;
+      }
+      .app-header h1 span {
+        font-size: 1.15rem;
+      }
+      .timeline::before {
+        left: 20px;
+      }
+      .entry {
+        grid-template-columns: 1fr;
+        padding-left: 44px;
+        gap: 12px;
+      }
+      .node {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 40px;
+        height: 40px;
+        transform: none;
+        margin: 0;
+      }
+      .node-year {
+        font-size: 0.72rem;
+      }
+      .node-era {
+        display: none;
+      }
+      .card::after {
+        display: none;
+      }
+      .card-historical {
+        order: 2;
+      }
+      .entry-notes {
+        padding: 0;
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <header class="app-header">
+      <div class="header-ornament">✦ ✦ ✦</div>
+      <h1>Tabla Cronológica<span>Bíblico – Histórica</span></h1>
+      <p class="subtitle">"Acuérdate de los días de la antigüedad, considera los años de muchas generaciones" · Deuteronomio 32:7</p>
+    </header>
+
+    <div class="toolbar">
+      <button id="btnNuevo" class="btn btn-gold">＋ Nuevo Evento</button>
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Buscar por evento, referencia o civilización…" aria-label="Buscar evento">
+      </div>
+      <button id="btnSortToggle" class="btn btn-outline">Orden: Más antiguo primero</button>
+      <button id="btnPrint" class="btn btn-outline">🖶 Imprimir</button>
+    </div>
+
+    <div class="timeline-legend">
+      <span class="legend-item biblical">Evento Bíblico</span>
+      <span class="legend-item historical">Evento Histórico Paralelo</span>
+    </div>
+
+    <main id="timeline" class="timeline" aria-live="polite"></main>
+    <p id="emptyState" class="empty-state" hidden>No hay eventos registrados todavía. Use "＋ Nuevo Evento" para comenzar el registro.</p>
+  </div>
+
+  <!-- Modal Nuevo / Editar Evento -->
+  <div id="modalEvento" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Nuevo Evento</h2>
+      <form id="formEvento">
+        <input type="hidden" id="eventoId">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fYear">Año</label>
+            <input type="number" id="fYear" min="1" max="9999" required>
+          </div>
+          <div class="form-group">
+            <label for="fEra">Era</label>
+            <select id="fEra">
+              <option value="AC">a.C.</option>
+              <option value="DC">d.C.</option>
+            </select>
+          </div>
+        </div>
+
+        <fieldset class="fieldset-biblical">
+          <legend>Evento Bíblico</legend>
+          <div class="form-group">
+            <label for="fBibEvent">Descripción del evento</label>
+            <input type="text" id="fBibEvent" required placeholder="Ej. Éxodo de Egipto">
+          </div>
+          <div class="form-group">
+            <label for="fBibRef">Referencia bíblica</label>
+            <input type="text" id="fBibRef" placeholder="Ej. Éxodo 12:31-42">
+          </div>
+        </fieldset>
+
+        <fieldset class="fieldset-historical">
+          <legend>Evento Histórico Paralelo</legend>
+          <div class="form-group">
+            <label for="fHistEvent">Descripción del evento</label>
+            <input type="text" id="fHistEvent" required placeholder="Ej. Egipto bajo la XVIII Dinastía">
+          </div>
+          <div class="form-group">
+            <label for="fHistRegion">Civilización / Imperio</label>
+            <input type="text" id="fHistRegion" placeholder="Ej. Antiguo Egipto">
+          </div>
+        </fieldset>
+
+        <div class="form-group">
+          <label for="fNotes">Notas adicionales</label>
+          <textarea id="fNotes" rows="2" placeholder="Observaciones, fuentes o comentarios (opcional)"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="btnCancelarEvento">Cancelar</button>
+          <button type="submit" class="btn btn-gold">Guardar Evento</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Confirmar Eliminación -->
+  <div id="modalEliminar" class="modal-overlay" hidden>
+    <div class="modal modal-sm" role="dialog" aria-modal="true">
+      <h2>Eliminar Evento</h2>
+      <p>¿Confirma que desea eliminar este registro? Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="btnCancelarEliminar">Cancelar</button>
+        <button class="btn btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Preparar Impresión -->
+  <div id="modalImprimir" class="modal-overlay" hidden>
+    <div class="modal modal-sm" role="dialog" aria-modal="true">
+      <h2>Preparar Impresión</h2>
+      <p>Seleccione el contenido a incluir en el documento impreso.</p>
+      <label class="checkbox-row"><input type="checkbox" id="printRefs" checked> Incluir referencias bíblicas</label>
+      <label class="checkbox-row"><input type="checkbox" id="printRegion" checked> Incluir civilización / imperio</label>
+      <label class="checkbox-row"><input type="checkbox" id="printNotes"> Incluir notas adicionales</label>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="btnCancelarImprimir">Cancelar</button>
+        <button class="btn btn-gold" id="btnConfirmarImprimir">Imprimir</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ---------- Firebase ----------
+      const firebaseConfig = {
+        apiKey: "AIzaSyC4e-go4lLFEN6l8Ri9M_252cVUrmTZbqQ",
+        authDomain: "cronologia-bh.firebaseapp.com",
+        projectId: "cronologia-bh",
+        storageBucket: "cronologia-bh.firebasestorage.app",
+        messagingSenderId: "889404644549",
+        appId: "1:889404644549:web:ee38a7082b35b4d47224ac"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // ---------- Datos semilla ----------
+      const seedData = [
+        { id: "e1", year: 2100, era: "AC", bibEvent: "Llamado de Abraham y la promesa a su descendencia", bibRef: "Génesis 12:1-3", histEvent: "Auge de la Tercera Dinastía de Ur y expansión de las ciudades-estado mesopotámicas", histRegion: "Mesopotamia (Ur III)", notes: "" },
+        { id: "e2", year: 1446, era: "AC", bibEvent: "Éxodo del pueblo de Israel fuera de Egipto", bibRef: "Éxodo 12:31-42", histEvent: "Egipto bajo la XVIII Dinastía, apogeo del Imperio Nuevo egipcio", histRegion: "Antiguo Egipto", notes: "" },
+        { id: "e3", year: 1010, era: "AC", bibEvent: "David es ungido como rey sobre todo Israel", bibRef: "2 Samuel 5:3-4", histEvent: "Reordenamiento político tras el colapso de la Edad del Bronce Final", histRegion: "Levante y Mediterráneo Oriental", notes: "" },
+        { id: "e4", year: 970, era: "AC", bibEvent: "Salomón inicia la construcción del Templo de Jerusalén", bibRef: "1 Reyes 6:1", histEvent: "Apogeo comercial y naval de Fenicia bajo el rey Hiram I de Tiro", histRegion: "Fenicia", notes: "" },
+        { id: "e5", year: 722, era: "AC", bibEvent: "Caída de Samaria y fin del Reino del Norte de Israel", bibRef: "2 Reyes 17:6", histEvent: "Expansión del Imperio Neoasirio bajo Salmanasar V y Sargón II", histRegion: "Imperio Neoasirio", notes: "" },
+        { id: "e6", year: 586, era: "AC", bibEvent: "Destrucción del Templo y exilio de Judá a Babilonia", bibRef: "2 Reyes 25:8-11", histEvent: "Apogeo del Imperio Neobabilónico bajo Nabucodonosor II", histRegion: "Imperio Neobabilónico", notes: "" },
+        { id: "e7", year: 539, era: "AC", bibEvent: "Edicto de Ciro que permite el retorno de los exiliados", bibRef: "Esdras 1:1-4", histEvent: "Ciro el Grande conquista Babilonia y funda el Imperio Persa Aqueménida", histRegion: "Imperio Persa", notes: "" },
+        { id: "e8", year: 4, era: "AC", bibEvent: "Nacimiento de Jesús en Belén de Judea", bibRef: "Lucas 2:1-7", histEvent: "Reinado de Augusto en Roma; Herodes el Grande gobierna Judea como rey cliente", histRegion: "Imperio Romano", notes: "" },
+        { id: "e9", year: 30, era: "DC", bibEvent: "Crucifixión, muerte y resurrección de Jesucristo", bibRef: "Mateo 27:32 – 28:10", histEvent: "Tiberio es emperador de Roma; Poncio Pilato es prefecto de Judea", histRegion: "Imperio Romano", notes: "" },
+        { id: "e10", year: 70, era: "DC", bibEvent: "Destrucción del Segundo Templo de Jerusalén", bibRef: "Cf. Mateo 24:2", histEvent: "Sitio y toma de Jerusalén por Tito bajo el emperador Vespasiano", histRegion: "Imperio Romano", notes: "" }
+      ];
+
+      // ---------- Estado ----------
+      let eventos = [];
+      let sortAsc = true;
+      let deleteTargetId = null;
+
+      // ---------- Utilidades ----------
+      function escapeHtml(str) {
+        if (str === undefined || str === null) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function sortValue(ev) {
+        return ev.era === "AC" ? -ev.year : ev.year;
+      }
+
+      function eraLabel(era) {
+        return era === "AC" ? "a.C." : "d.C.";
+      }
+
+      // ---------- Funciones de Firestore ----------
+      async function cargarDesdeFirestore() {
+        try {
+          const snapshot = await db.collection("crono").get();
+          if (snapshot.empty) {
+            // Subir datos semilla
+            const batch = db.batch();
+            seedData.forEach(doc => {
+              const ref = db.collection("crono").doc(doc.id);
+              batch.set(ref, doc);
+            });
+            await batch.commit();
+            // Recargar
+            const newSnapshot = await db.collection("crono").get();
+            return newSnapshot.docs.map(doc => doc.data());
+          } else {
+            return snapshot.docs.map(doc => doc.data());
+          }
+        } catch (error) {
+          console.error("Error al cargar desde Firestore:", error);
+          return [];
+        }
+      }
+
+      async function guardarEventoEnFirestore(evento) {
+        try {
+          await db.collection("crono").doc(evento.id).set(evento);
+        } catch (error) {
+          console.error("Error al guardar evento en Firestore:", error);
+        }
+      }
+
+      async function eliminarEventoDeFirestore(id) {
+        try {
+          await db.collection("crono").doc(id).delete();
+        } catch (error) {
+          console.error("Error al eliminar evento de Firestore:", error);
+        }
+      }
+
+      // ---------- Carga inicial ----------
+      async function loadData() {
+        eventos = await cargarDesdeFirestore();
+      }
+
+      // ---------- Renderizado ----------
+      function render() {
+        const container = document.getElementById("timeline");
+        const emptyState = document.getElementById("emptyState");
+        const query = document.getElementById("searchInput").value.trim().toLowerCase();
+
+        let list = eventos.filter(ev => {
+          if (!query) return true;
+          const haystack = [ev.bibEvent, ev.bibRef, ev.histEvent, ev.histRegion, ev.notes].join(" ").toLowerCase();
+          return haystack.includes(query);
+        });
+
+        list.sort((a, b) => sortAsc ? sortValue(a) - sortValue(b) : sortValue(b) - sortValue(a));
+
+        container.innerHTML = "";
+
+        if (list.length === 0) {
+          emptyState.hidden = false;
+          emptyState.textContent = eventos.length === 0 ?
+            'No hay eventos registrados todavía. Use "＋ Nuevo Evento" para comenzar el registro.' :
+            "Ningún evento coincide con la búsqueda.";
+          return;
+        }
+        emptyState.hidden = true;
+
+        list.forEach(ev => {
+          const entry = document.createElement("div");
+          entry.className = "entry";
+          entry.dataset.id = ev.id;
+
+          entry.innerHTML = `
+            <div class="card card-biblical">
+              <span class="eyebrow biblical-label">Evento Bíblico</span>
+              <h3>${escapeHtml(ev.bibEvent)}</h3>
+              ${ev.bibRef ? `<p class="ref ref-biblical">${escapeHtml(ev.bibRef)}</p>` : ""}
+            </div>
+            <div class="node">
+              <span class="node-year">${escapeHtml(ev.year)}</span>
+              <span class="node-era">${eraLabel(ev.era)}</span>
+            </div>
+            <div class="card card-historical">
+              <span class="eyebrow historical-label">Evento Histórico</span>
+              <h3>${escapeHtml(ev.histEvent)}</h3>
+              ${ev.histRegion ? `<p class="ref ref-historical">${escapeHtml(ev.histRegion)}</p>` : ""}
+            </div>
+            ${ev.notes ? `<div class="entry-notes">${escapeHtml(ev.notes)}</div>` : ""}
+            <div class="entry-actions">
+              <button class="icon-btn" data-action="edit" aria-label="Editar evento">✎</button>
+              <button class="icon-btn danger" data-action="delete" aria-label="Eliminar evento">🗑</button>
+            </div>
+          `;
+          container.appendChild(entry);
+        });
+      }
+
+      // ---------- Inicialización ----------
+      async function init() {
+        await loadData();
+        render();
+      }
+
+      // ---------- Modales ----------
+      function showOverlay(el) {
+        el.hidden = false;
+        el.classList.add("is-open");
+      }
+
+      function hideOverlay(el) {
+        el.hidden = true;
+        el.classList.remove("is-open");
+      }
+
+      const modalEvento = document.getElementById("modalEvento");
+      const formEvento = document.getElementById("formEvento");
+      const modalTitle = document.getElementById("modalTitle");
+
+      function openModalNuevo() {
+        formEvento.reset();
+        document.getElementById("eventoId").value = "";
+        document.getElementById("fEra").value = "AC";
+        modalTitle.textContent = "Nuevo Evento";
+        showOverlay(modalEvento);
+        document.getElementById("fYear").focus();
+      }
+
+      function openModalEditar(id) {
+        const ev = eventos.find(e => e.id === id);
+        if (!ev) return;
+        document.getElementById("eventoId").value = ev.id;
+        document.getElementById("fYear").value = ev.year;
+        document.getElementById("fEra").value = ev.era;
+        document.getElementById("fBibEvent").value = ev.bibEvent;
+        document.getElementById("fBibRef").value = ev.bibRef || "";
+        document.getElementById("fHistEvent").value = ev.histEvent;
+        document.getElementById("fHistRegion").value = ev.histRegion || "";
+        document.getElementById("fNotes").value = ev.notes || "";
+        modalTitle.textContent = "Editar Evento";
+        showOverlay(modalEvento);
+        document.getElementById("fYear").focus();
+      }
+
+      function closeModalEvento() {
+        hideOverlay(modalEvento);
+      }
+
+      // ---------- Guardar (crear/editar) ----------
+      formEvento.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const id = document.getElementById("eventoId").value;
+        const data = {
+          id: id,
+          year: parseInt(document.getElementById("fYear").value, 10),
+          era: document.getElementById("fEra").value,
+          bibEvent: document.getElementById("fBibEvent").value.trim(),
+          bibRef: document.getElementById("fBibRef").value.trim(),
+          histEvent: document.getElementById("fHistEvent").value.trim(),
+          histRegion: document.getElementById("fHistRegion").value.trim(),
+          notes: document.getElementById("fNotes").value.trim()
+        };
+
+        if (!data.year || !data.bibEvent || !data.histEvent) {
+          return;
+        }
+
+        if (id) {
+          // Editar: actualizar en array y Firestore
+          const idx = eventos.findIndex(e => e.id === id);
+          if (idx > -1) {
+            eventos[idx] = data;
+            await guardarEventoEnFirestore(data);
+          }
+        } else {
+          // Nuevo: generar id y agregar
+          const newId = "e" + Date.now();
+          data.id = newId;
+          eventos.push(data);
+          await guardarEventoEnFirestore(data);
+        }
+
+        closeModalEvento();
+        render();
+      });
+
+      document.getElementById("btnNuevo").addEventListener("click", openModalNuevo);
+      document.getElementById("btnCancelarEvento").addEventListener("click", closeModalEvento);
+
+      // ---------- Eliminar ----------
+      const modalEliminar = document.getElementById("modalEliminar");
+
+      function openModalEliminar(id) {
+        deleteTargetId = id;
+        showOverlay(modalEliminar);
+      }
+
+      function closeModalEliminar() {
+        deleteTargetId = null;
+        hideOverlay(modalEliminar);
+      }
+
+      document.getElementById("btnCancelarEliminar").addEventListener("click", closeModalEliminar);
+      document.getElementById("btnConfirmarEliminar").addEventListener("click", async function() {
+        if (deleteTargetId) {
+          await eliminarEventoDeFirestore(deleteTargetId);
+          eventos = eventos.filter(e => e.id !== deleteTargetId);
+          deleteTargetId = null;
+        }
+        closeModalEliminar();
+        render();
+      });
+
+      // ---------- Delegación de acciones ----------
+      document.getElementById("timeline").addEventListener("click", function(e) {
+        const btn = e.target.closest("[data-action]");
+        if (!btn) return;
+        const entry = e.target.closest(".entry");
+        const id = entry.dataset.id;
+        if (btn.dataset.action === "edit") openModalEditar(id);
+        if (btn.dataset.action === "delete") openModalEliminar(id);
+      });
+
+      // ---------- Búsqueda y orden ----------
+      document.getElementById("searchInput").addEventListener("input", render);
+
+      document.getElementById("btnSortToggle").addEventListener("click", function() {
+        sortAsc = !sortAsc;
+        this.textContent = "Orden: " + (sortAsc ? "Más antiguo primero" : "Más reciente primero");
+        render();
+      });
+
+      // ---------- Impresión ----------
+      const modalImprimir = document.getElementById("modalImprimir");
+
+      document.getElementById("btnPrint").addEventListener("click", function() {
+        showOverlay(modalImprimir);
+      });
+      document.getElementById("btnCancelarImprimir").addEventListener("click", function() {
+        hideOverlay(modalImprimir);
+      });
+      document.getElementById("btnConfirmarImprimir").addEventListener("click", function() {
+        const body = document.body;
+        body.classList.toggle("hide-refs", !document.getElementById("printRefs").checked);
+        body.classList.toggle("hide-region", !document.getElementById("printRegion").checked);
+        body.classList.toggle("hide-notes", !document.getElementById("printNotes").checked);
+        hideOverlay(modalImprimir);
+        window.setTimeout(function() { window.print(); }, 50);
+      });
+
+      // ---------- Cierre de modales con Escape o clic en overlay ----------
+      [modalEvento, modalEliminar, modalImprimir].forEach(overlay => {
+        overlay.addEventListener("click", function(e) {
+          if (e.target === overlay) hideOverlay(overlay);
+        });
+      });
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+          hideOverlay(modalEvento);
+          hideOverlay(modalEliminar);
+          hideOverlay(modalImprimir);
+        }
+      });
+
+      // ---------- Inicio ----------
+      init().catch(console.error);
+    })();
+  </script>
+</body>
+</html>
