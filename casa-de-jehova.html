@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La casa de Jehová: plano del templo de Salomón</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Instrument+Serif&display=swap">
+<style>
+:root{--bg:#eeebe3;--sf:#f9f7f2;--ln:#cfc9b9;--tx:#14233f;--mu:#566074;--au:#a87a14;--auf:rgba(201,154,46,.38);--st:#e4dfd2;--gr:rgba(20,35,63,.07);--ab:#8a6410;--abt:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1730;--sf:#112244;--ln:#2b4375;--tx:#e9eef8;--mu:#a3b2cf;--au:#e2b24a;--auf:rgba(226,178,74,.3);--st:#18305c;--gr:rgba(160,185,235,.08);--ab:#e2b24a;--abt:#0b1730}}
+:root[data-theme="dark"]{--bg:#0b1730;--sf:#112244;--ln:#2b4375;--tx:#e9eef8;--mu:#a3b2cf;--au:#e2b24a;--auf:rgba(226,178,74,.3);--st:#18305c;--gr:rgba(160,185,235,.08);--ab:#e2b24a;--abt:#0b1730}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 "Hanken Grotesk",system-ui,sans-serif}
+[hidden]{display:none!important}
+.w{max-width:960px;margin:0 auto;padding:28px 20px 48px}
+h1{font:400 clamp(46px,10vw,88px)/.95 "Instrument Serif",Georgia,serif;letter-spacing:-.02em;margin:0 0 14px}
+.lead{max-width:50ch;color:var(--mu);margin:0 0 26px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;color:var(--mu);font-size:14px}
+.seg{display:inline-flex;border:1px solid var(--ln);border-radius:99px;padding:3px;background:var(--sf)}
+.seg button{border:0;background:none;color:var(--mu);padding:6px 16px;border-radius:99px;font:inherit;font-size:14px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--tx);color:var(--bg)}
+.plan{border:1px solid var(--ln);border-radius:18px;padding:12px;background-color:var(--sf);background-image:linear-gradient(var(--gr) 1px,transparent 1px),linear-gradient(90deg,var(--gr) 1px,transparent 1px);background-size:24px 24px}
+svg{display:block;width:100%;height:auto}
+.z{fill:var(--st);stroke:var(--tx);stroke-width:1.5;cursor:pointer;transition:fill .3s,stroke .3s}
+.z.on{fill:var(--auf);stroke:var(--au);stroke-width:2.5}
+.z.a{fill:none;stroke-dasharray:6 5;stroke-width:1.2;pointer-events:stroke}
+.z.a.on{stroke-dasharray:none}
+.d{fill:var(--tx);cursor:pointer;transition:fill .3s}
+.d.on{fill:var(--au)}
+.ch{fill:var(--au);opacity:.45;cursor:pointer;transition:opacity .3s}
+.ch.on{opacity:1}
+svg text{font:600 13px "Hanken Grotesk",sans-serif;fill:var(--tx);pointer-events:none}
+svg tspan.s{font-weight:400;font-size:12px;fill:var(--mu)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:16px 2px 10px;scrollbar-width:thin}
+.chips button{flex:none;border:1px solid var(--ln);background:var(--sf);color:var(--tx);border-radius:99px;padding:8px 15px;font:inherit;font-size:14px;cursor:pointer}
+.chips button[aria-current=true]{background:var(--ab);border-color:var(--ab);color:var(--abt)}
+.read{display:grid;gap:24px;background:var(--sf);border:1px solid var(--ln);border-radius:18px;padding:24px;margin-top:6px}
+@media(min-width:780px){.read{grid-template-columns:1fr 230px;padding:32px 34px}.read.solo{grid-template-columns:1fr}}
+h2{font:400 36px/1.05 "Instrument Serif",Georgia,serif;margin:0 0 16px}
+.txt p{font:400 21px/1.55 "Instrument Serif",Georgia,serif;margin:0 0 .75em;max-width:60ch}
+dl{margin:0;display:grid;gap:16px;align-content:start}
+@media(min-width:780px){dl{border-left:1px solid var(--ln);padding-left:24px}}
+dt{font-size:13px;color:var(--mu)}
+dd{margin:2px 0 0;font:400 30px/1.1 "Instrument Serif",Georgia,serif;color:var(--au)}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:16px}
+.nav button{border:1px solid var(--ln);background:var(--sf);color:var(--tx);border-radius:99px;padding:10px 20px;font:inherit;font-weight:500;cursor:pointer}
+.nav button:disabled{opacity:.4;cursor:default}
+.f{animation:in .35s ease}
+@keyframes in{from{opacity:.2}to{opacity:1}}
+button:focus-visible{outline:3px solid var(--au);outline-offset:2px}
+.foot{margin-top:28px;font-size:13px;color:var(--mu);max-width:70ch}
+#v3{position:relative;aspect-ratio:16/9;min-height:290px;touch-action:none;cursor:grab}
+#v3:active{cursor:grabbing}
+#v3 canvas{position:absolute;inset:0;width:100%;height:100%}
+#v3 small{position:absolute;left:10px;bottom:6px;color:var(--mu);font-size:12px;pointer-events:none}
+.ctl{display:flex;gap:10px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="w">
+<h1>La casa de Jehová</h1>
+<p class="lead">El templo que Salomón edificó, dibujado a escala. Toca una parte del plano o recorre el relato por etapas.</p>
+
+<div class="bar"><span id="bt">Planta del templo</span>
+<div class="ctl"><div class="seg" id="vw" role="group" aria-label="Vista"><button id="vp" aria-pressed="true">Plano</button><button id="v3b" aria-pressed="false">3D</button></div>
+<div class="seg" role="group" aria-label="Unidad de medida"><button id="uc" aria-pressed="true">Codos</button><button id="um" aria-pressed="false">Metros</button></div></div></div>
+
+<div class="plan">
+<svg viewBox="0 0 680 284" role="img" aria-label="Planta del templo: pórtico, templo, lugar santísimo, aposentos laterales y atrio">
+<rect class="z a" data-r="atrio" x="4" y="6" width="672" height="274" rx="10"/>
+<rect class="z" data-r="camaras" x="120" y="22" width="520" height="40"/>
+<rect class="z" data-r="camaras" x="120" y="222" width="520" height="40"/>
+<rect class="z" data-r="camaras" x="600" y="62" width="40" height="160"/>
+<rect class="z" data-r="portico" x="40" y="62" width="80" height="160"/>
+<rect class="z" data-r="nave" x="120" y="62" width="320" height="160"/>
+<rect class="z" data-r="santo" x="440" y="62" width="160" height="160"/>
+<rect class="d" data-r="puertas" x="116" y="122" width="8" height="40" rx="2"/>
+<rect class="d" data-r="puertas" x="436" y="122" width="8" height="40" rx="2"/>
+<rect class="ch" data-r="cher" x="558" y="66" width="24" height="72" rx="12"/>
+<rect class="ch" data-r="cher" x="558" y="146" width="24" height="72" rx="12"/>
+<text x="80" y="136" text-anchor="middle">Pórtico<tspan class="s" x="80" dy="17" id="dp"></tspan></text>
+<text x="280" y="136" text-anchor="middle">Templo<tspan class="s" x="280" dy="17" id="dn"></tspan></text>
+<text x="498" y="136" text-anchor="middle">Lugar santísimo<tspan class="s" x="498" dy="17" id="ds"></tspan></text>
+<text x="380" y="46" text-anchor="middle"><tspan class="s">Aposentos laterales</tspan></text>
+<text x="16" y="24"><tspan class="s">Atrio interior</tspan></text>
+</svg>
+<div id="v3" hidden><canvas role="img" aria-label="Modelo 3D del templo; arrastra para girarlo"></canvas><small>Arrastra para girar · rueda o pellizco para acercar · toca una parte para leer su relato</small></div>
+</div>
+
+<nav class="chips" id="chips" aria-label="Etapas del relato"></nav>
+
+<section class="read" id="rd" aria-live="polite">
+<div class="txt"><h2 id="h"></h2><div id="b"></div></div>
+<dl id="k"></dl>
+</section>
+<div class="nav"><button id="pv">Anterior</button><button id="nx">Siguiente</button></div>
+
+<p class="foot">Relato de la construcción del templo (1 Reyes 6). Para la conversión se usa 1 codo = 0,45 m; es una equivalencia aproximada. En el modelo 3D la altura del pórtico no figura en este relato y se dibuja igual a la de la casa.</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ALL=['portico','nave','santo','camaras','atrio'];
+const S=[
+{t:'El comienzo',r:['nave','santo'],k:[['Desde la salida de Egipto','480 años'],['Largo',60],['Ancho',20],['Alto',30]],v:[
+`En el año cuatrocientos ochenta después que los hijos de Israel salieron de Egipto, el cuarto año del principio del reino de Salomón sobre Israel, en el mes de Zif, que es el mes segundo, comenzó él a edificar la casa de Jehová.`,
+`La casa que el rey Salomón edificó a Jehová tenía sesenta codos de largo y veinte de ancho, y treinta codos de alto.`]},
+{t:'Pórtico y ventanas',r:['portico'],p:'portico',k:[['Frente del pórtico',20],['Fondo del pórtico',10]],v:[
+`Y el pórtico delante del templo de la casa tenía veinte codos de largo a lo ancho de la casa, y el ancho delante de la casa era de diez codos.`,
+`E hizo a la casa ventanas anchas por dentro y estrechas por fuera.`]},
+{t:'Aposentos y piedra',r:['camaras'],p:'camaras',k:[['Piso bajo, ancho',5],['Piso medio, ancho',6],['Tercer piso, ancho',7],['Altura de los aposentos',5]],v:[
+`Edificó también junto al muro de la casa aposentos alrededor, contra las paredes de la casa alrededor del templo y del lugar santísimo; e hizo cámaras laterales alrededor.`,
+`El aposento de abajo era de cinco codos de ancho, el de en medio de seis codos de ancho, y el tercero de siete codos de ancho; porque por fuera había hecho disminuciones a la casa alrededor, para no empotrar las vigas en las paredes de la casa.`,
+`Y cuando se edificó la casa, la fabricaron de piedras que traían ya acabadas, de tal manera que cuando la edificaban, ni martillos ni hachas se oyeron en la casa, ni ningún otro instrumento de hierro.`,
+`La puerta del aposento de en medio estaba al lado derecho de la casa; y se subía por una escalera de caracol al de en medio, y del aposento de en medio al tercero.`,
+`Labró, pues, la casa, y la terminó; y la cubrió con artesonados de cedro.`,
+`Edificó asimismo el aposento alrededor de toda la casa, de altura de cinco codos, el cual se apoyaba en la casa con maderas de cedro.`]},
+{t:'La palabra de Jehová',r:['nave','santo'],k:[],v:[
+`Y vino palabra de Jehová a Salomón, diciendo:`,
+`Con relación a esta casa que tú edificas, si anduvieres en mis estatutos e hicieres mis decretos, y guardares todos mis mandamientos andando en ellos, yo cumpliré contigo mi palabra que hablé a David tu padre;`,
+`y habitaré en ella en medio de los hijos de Israel, y no dejaré a mi pueblo Israel.`,
+`Así, pues, Salomón labró la casa y la terminó.`]},
+{t:'Cedro por dentro',r:['nave'],p:'nave',k:[['Largo del templo',40],['Revestimiento','Cedro']],v:[
+`Y cubrió las paredes de la casa con tablas de cedro, revistiéndola de madera por dentro, desde el suelo de la casa hasta las vigas de la techumbre; cubrió también el pavimento con madera de ciprés.`,
+`Asimismo hizo al final de la casa un edificio de veinte codos, de tablas de cedro desde el suelo hasta lo más alto; así hizo en la casa un aposento que es el lugar santísimo.`,
+`La casa, esto es, el templo de adelante, tenía cuarenta codos.`,
+`Y la casa estaba cubierta de cedro por dentro, y tenía entalladuras de calabazas silvestres y de botones de flores. Todo era cedro; ninguna piedra se veía.`]},
+{t:'El lugar santísimo',r:['santo'],p:'santo',k:[['Largo',20],['Ancho',20],['Alto',20],['Cubierta','Oro purísimo']],v:[
+`Y adornó el lugar santísimo por dentro en medio de la casa, para poner allí el arca del pacto de Jehová.`,
+`El lugar santísimo estaba en la parte de adentro, el cual tenía veinte codos de largo, veinte de ancho, y veinte de altura; y lo cubrió de oro purísimo; asimismo cubrió de oro el altar de cedro.`,
+`De manera que Salomón cubrió de oro puro la casa por dentro, y cerró la entrada del santuario con cadenas de oro, y lo cubrió de oro.`,
+`Cubrió, pues, de oro toda la casa de arriba abajo, y asimismo cubrió de oro todo el altar que estaba frente al lugar santísimo.`]},
+{t:'Los querubines',r:['santo','cher'],p:'cher',k:[['Altura de cada querubín',10],['Cada ala',5],['Entre las puntas de las alas',10]],v:[
+`Hizo también en el lugar santísimo dos querubines de madera de olivo, cada uno de diez codos de altura.`,
+`Una ala del querubín tenía cinco codos, y la otra ala del querubín otros cinco codos; así que había diez codos desde la punta de una ala hasta la punta de la otra.`,
+`Asimismo el otro querubín tenía diez codos; porque ambos querubines eran de un mismo tamaño y de una misma hechura.`,
+`La altura del uno era de diez codos, y asimismo la del otro.`,
+`Puso estos querubines dentro de la casa en el lugar santísimo, los cuales extendían sus alas, de modo que el ala de uno tocaba una pared, y el ala del otro tocaba la otra pared, y las otras dos alas se tocaban la una a la otra en medio de la casa.`,
+`Y cubrió de oro los querubines.`,
+`Y esculpió todas las paredes de la casa alrededor de diversas figuras, de querubines, de palmeras y de botones de flores, por dentro y por fuera.`,
+`Y cubrió de oro el piso de la casa, por dentro y por fuera.`]},
+{t:'Las puertas',r:['puertas'],p:'puertas',k:[['Maderas','Olivo y ciprés'],['Tallas','Querubines, palmeras y flores']],v:[
+`A la entrada del santuario hizo puertas de madera de olivo; y el umbral y los postes eran de cinco esquinas.`,
+`Las dos puertas eran de madera de olivo; y talló en ellas figuras de querubines, de palmeras y de botones de flores, y las cubrió de oro; cubrió también de oro los querubines y las palmeras.`,
+`Igualmente hizo a la puerta del templo postes cuadrados de madera de olivo.`,
+`Pero las dos puertas eran de madera de ciprés; y las dos hojas de una puerta giraban, y las otras dos hojas de la otra puerta también giraban.`,
+`Y talló en ellas querubines y palmeras y botones de flores, y las cubrió de oro ajustado a las talladuras.`]},
+{t:'Atrio y final de la obra',r:ALL,p:'atrio',k:[['Cimientos','Año 4, mes de Zif'],['Obra acabada','Año 11, mes de Bul'],['Duración','7 años']],v:[
+`Y edificó el atrio interior de tres hileras de piedras labradas, y de una hilera de vigas de cedro.`,
+`En el cuarto año, en el mes de Zif, se echaron los cimientos de la casa de Jehová.`,
+`Y en el undécimo año, en el mes de Bul, que es el mes octavo, fue acabada la casa con todas sus dependencias, y con todo lo necesario. La edificó, pues, en siete años.`]}
+];
+let i=0,m=false,T=null;
+const g=c=>m?+(c*.45).toLocaleString('en',{maximumFractionDigits:2}).replace(',','')||0:c;
+const n=c=>(m?(c*.45):c).toLocaleString('es',{maximumFractionDigits:2});
+const f=c=>n(c)+(m?' m':' codos');
+const chips=$('#chips');
+S.forEach((s,j)=>{const b=document.createElement('button');b.textContent=s.t;b.onclick=()=>{i=j;render()};chips.appendChild(b)});
+function render(){
+ const s=S[i];
+ [...chips.children].forEach((b,j)=>{b.setAttribute('aria-current',j===i);if(j===i)b.scrollIntoView({inline:'center',block:'nearest'})});
+ $('#h').textContent=s.t;
+ $('#b').innerHTML=s.v.map(x=>`<p>${x}</p>`).join('');
+ $('#k').innerHTML=s.k.map(([a,b])=>`<div><dt>${a}</dt><dd>${typeof b==='number'?f(b):b}</dd></div>`).join('');
+ $('#k').hidden=!s.k.length;
+ $('#rd').classList.toggle('solo',!s.k.length);
+ document.querySelectorAll('[data-r]').forEach(e=>e.classList.toggle('on',s.r.includes(e.dataset.r)));
+ const d=(a,b)=>`${n(a)} × ${n(b)}${m?' m':''}`;
+ $('#dp').textContent=d(10,20);$('#dn').textContent=d(40,20);$('#ds').textContent=d(20,20);
+ if(T)T.paint(s.r);
+ $('#pv').disabled=i===0;$('#nx').disabled=i===S.length-1;
+ const r=$('#rd');r.classList.remove('f');void r.offsetWidth;r.classList.add('f');
+}
+$('#pv').onclick=()=>{i--;render()};
+$('#nx').onclick=()=>{i++;render()};
+document.querySelectorAll('[data-r]').forEach(e=>e.addEventListener('click',()=>{
+ const j=S.findIndex(s=>s.p===e.dataset.r);if(j>-1){i=j;render()}}));
+function unit(x){m=x;$('#uc').setAttribute('aria-pressed',!x);$('#um').setAttribute('aria-pressed',x);render()}
+$('#uc').onclick=()=>unit(false);$('#um').onclick=()=>unit(true);
+function init3d(){
+ const box=$('#v3'),cv=box.querySelector('canvas');
+ const R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+ R.setPixelRatio(Math.min(devicePixelRatio,2));
+ const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(38,2,1,800);
+ sc.add(new THREE.AmbientLight(0xffffff,.8));
+ const dl=new THREE.DirectionalLight(0xffffff,.55);dl.position.set(-30,80,60);sc.add(dl);
+ const parts=[],rc=new THREE.Raycaster(),v2=new THREE.Vector2();
+ // x = largo, z = ancho, y = alto (en codos)
+ const add=(r,x0,x1,z0,z1,y0,y1,k='w')=>{
+  const g=new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mt=new THREE.MeshLambertMaterial({transparent:true,depthWrite:false});
+  const me=new THREE.Mesh(g,mt),ed=new THREE.LineSegments(new THREE.EdgesGeometry(g),new THREE.LineBasicMaterial({transparent:true}));
+  me.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);me.add(ed);me.userData={r,mt,ed,k};sc.add(me);parts.push(me)};
+ add('portico',0,10,-10,10,0,30);
+ add('nave',10,50,-10,10,0,30);
+ add('santo',50,70,-10,10,0,20);
+ [5,6,7].forEach((w,n)=>{const y0=n*5,y1=y0+5;
+  add('camaras',10,70+w,-10-w,-10,y0,y1);add('camaras',10,70+w,10,10+w,y0,y1);add('camaras',70,70+w,-10,10,y0,y1)});
+ add('puertas',9.5,10.5,-2.5,2.5,0,10,'d');add('puertas',49.5,50.5,-2.5,2.5,0,10,'d');
+ add('cher',64.75,67.75,-9.5,-.5,0,10,'c');add('cher',64.75,67.75,.5,9.5,0,10,'c');
+ add('atrio',-4.5,79.5,-17,-16.2,0,3);add('atrio',-4.5,79.5,16.2,17,0,3);add('atrio',-4.5,-3.7,-17,17,0,3);add('atrio',78.7,79.5,-17,17,0,3);
+ const col=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+ let on=[];
+ function paint(){
+  const st=col('--st'),au=col('--au'),tx=col('--tx');
+  parts.forEach(p=>{const u=p.userData,a=on.includes(u.r);
+   u.mt.color.set(a||u.k==='c'?au:u.k==='d'?tx:st);
+   u.mt.opacity=u.k==='w'?(a?.55:.25):(a?1:.7);
+   u.ed.material.color.set(a?au:tx);u.ed.material.opacity=a?1:.45})}
+ const tg=new THREE.Vector3(37,6,0);let th=2.07,ph=1,rd=115;
+ const cl=v=>Math.min(260,Math.max(45,v));
+ function draw(){
+  cam.position.set(tg.x+rd*Math.sin(ph)*Math.cos(th),tg.y+rd*Math.cos(ph),tg.z+rd*Math.sin(ph)*Math.sin(th));
+  cam.lookAt(tg);R.render(sc,cam)}
+ new ResizeObserver(()=>{const w=box.clientWidth,h=box.clientHeight;if(!w)return;
+  R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();draw()}).observe(box);
+ const P=new Map();let d0=0,mv=0;
+ const pd=()=>{const a=[...P.values()];return a.length>1?Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]):0};
+ box.onpointerdown=e=>{box.setPointerCapture(e.pointerId);P.set(e.pointerId,[e.clientX,e.clientY]);mv=0;d0=pd()};
+ box.onpointermove=e=>{const q=P.get(e.pointerId);if(!q)return;
+  const dx=e.clientX-q[0],dy=e.clientY-q[1];mv+=Math.abs(dx)+Math.abs(dy);
+  q[0]=e.clientX;q[1]=e.clientY;
+  if(P.size===1){th+=dx*.008;ph=Math.min(1.5,Math.max(.15,ph-dy*.008))}
+  else{const d=pd();if(d0&&d)rd=cl(rd*d0/d);d0=d}
+  draw()};
+ box.onpointercancel=e=>P.delete(e.pointerId);
+ box.onpointerup=e=>{P.delete(e.pointerId);if(P.size||mv>6)return;
+  const b=cv.getBoundingClientRect();
+  v2.set((e.clientX-b.left)/b.width*2-1,-((e.clientY-b.top)/b.height)*2+1);
+  rc.setFromCamera(v2,cam);const hs=rc.intersectObjects(parts),h=hs.find(x=>x.object.userData.k!=='w')||hs[0];
+  if(!h)return;const j=S.findIndex(s=>s.p===h.object.userData.r);if(j>-1){i=j;render()}};
+ box.addEventListener('wheel',e=>{e.preventDefault();rd=cl(rd*(1+e.deltaY*.001));draw()},{passive:false});
+ const rp=()=>{paint();draw()};
+ matchMedia('(prefers-color-scheme:dark)').addEventListener('change',rp);
+ new MutationObserver(rp).observe(document.documentElement,{attributes:true});
+ return{paint:r=>{on=r;paint();if(!box.hidden)draw()},draw}}
+function view(v){
+ $('#vp').setAttribute('aria-pressed',!v);$('#v3b').setAttribute('aria-pressed',v);
+ $('.plan svg').hidden=v;$('#v3').hidden=!v;$('#bt').textContent=v?'Modelo 3D':'Planta del templo';
+ if(v&&T)T.draw()}
+$('#vp').onclick=()=>view(false);$('#v3b').onclick=()=>view(true);
+try{T=init3d()}catch(e){$('#vw').hidden=true}
+render();
+</script>
+</body>
+</html>
